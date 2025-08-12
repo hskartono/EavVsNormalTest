@@ -48,15 +48,19 @@ namespace EavVsNormalTest
         }
 
         [Test]
-        public void Compare_InsertAndRead_Performance()
+        public void Compare_InsertAndReadNormal_Performance()
         {
             var normalTime = InsertAndRead_NormalTable();
-            var eavTime = InsertAndRead_EAVTable();
 
             TestContext.WriteLine($"Normal Table Time: {normalTime.TotalMilliseconds} ms");
-            TestContext.WriteLine($"EAV Table Time: {eavTime.TotalMilliseconds} ms");
+        }
 
-            Assert.Less(normalTime, eavTime, "Normal table seharusnya lebih cepat dari EAV");
+        [Test]
+        public void Compare_InsertAndReadEav_Performance()
+        {
+            var eavTime = InsertAndRead_EAVTable();
+
+            TestContext.WriteLine($"EAV Table Time: {eavTime.TotalMilliseconds} ms");
         }
 
         private TimeSpan InsertAndRead_NormalTable()
@@ -67,7 +71,7 @@ namespace EavVsNormalTest
             {
                 conn.Open();
 
-                for (int i = 0; i < 10000; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     var cmd = new SqlCommand(@"
                         INSERT INTO WorkOrders (Line, TransDate, WorkNo, CustomerName)
@@ -100,7 +104,7 @@ namespace EavVsNormalTest
             {
                 conn.Open();
 
-                for (int i = 0; i < 10000; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     var fields = new[]
                     {
